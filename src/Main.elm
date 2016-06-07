@@ -324,19 +324,38 @@ speakerImage filename =
 --           ]
 --         ]
 
+-- talkView : ConferenceTalkR -> Html Msg
+-- talkView record =
+--     tr []
+--         [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
+--         , td [] [text record.speaker]
+--         , td [] [text record.conferenceName]
+--         , td []  [text record.location] -- TODO: div [ class "location"] ?
+--         , td [] [text record.date]
+--         ]
+
 talkView : ConferenceTalkR -> Html Msg
 talkView record =
-    tr []
-        [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
-        , td [] [text record.speaker]
-        , td [] [text record.conferenceName]
-        , td []  [text record.location] -- TODO: div [ class "location"] ?
-        , td [] [text record.date]
+  a [ class "event-card meetup grow", href record.conferenceLink]
+      [ div [ class "meetup-header"]
+          [ h3 []
+              [text (withDefault "Talk title to be announced" record.talkTitle)]
+          -- , span [] []
+          -- , logoEl
+          ]
+      , div [ class "meetup-footer"]
+          [ h4 []
+             [text ("by " ++ record.speaker)]
+          -- , div [] [text (DateFormat.format "%e %B %Y" record.date)]
+          -- , div [] [text record.conferenceName]
+          , div [] [text record.date]
+          , div [ class "location"] [text record.location]
         ]
+      ]
+
 
 meetupView : MeetupEvent -> Html Msg
 meetupView record =
-
   let
     logoEl =
       case record.logoUrl of
@@ -373,17 +392,6 @@ renderEvent event =
 --         -- Meetup record ->
 --         --     meetupView record
 
--- renderEvents : List Event -> Html Msg
--- renderEvents events =
---     let
---         eventViews = List.map renderEvent events
---     in
---         div [ class "upcoming-talks"]
---             [ h2 [] [ text "Upcoming Talks and Workshops" ]
---             , div [ class "talks"]
---                 eventViews
---             ]
-
 renderEvents : List Event -> Html Msg
 renderEvents events =
     let
@@ -391,23 +399,33 @@ renderEvents events =
     in
         div [ class "upcoming-talks"]
             [ h2 [] [ text "Upcoming Talks and Workshops" ]
-            , table []
-                (
-                    [ thead []
-                        [ tr []
-                            [ th [] [ text "Talk Title"]
-                            , th [] [ text "Speaker"]
-                            , th [] [ text "Conference"]
-                            , th [] [ text "Where"]
-                            , th [] [ text "When"]
-                            ]
-                        ]
-                    , tbody []
-                        eventViews
-                    ]
-                )
+            , div [ class "talks"]
+                eventViews
             ]
 
+-- renderEvents : List Event -> Html Msg
+-- renderEvents events =
+--     let
+--         eventViews = List.map renderEvent events
+--     in
+--         div [ class "upcoming-talks"]
+--             [ h2 [] [ text "Upcoming Talks and Workshops" ]
+--             , table []
+--                 (
+--                     [ thead []
+--                         [ tr []
+--                             [ th [] [ text "Talk Title"]
+--                             , th [] [ text "Speaker"]
+--                             , th [] [ text "Conference"]
+--                             , th [] [ text "Where"]
+--                             , th [] [ text "When"]
+--                             ]
+--                         ]
+--                     , tbody []
+--                         eventViews
+--                     ]
+--                 )
+--             ]
 
 renderSuggestedConference : SuggestedConferenceR -> Html Msg
 renderSuggestedConference conf =
@@ -548,7 +566,7 @@ mainView model =
               [ h1 [] [ text "Elm Events" ]
               ]
           , renderEvents (getFutureEvents upcomingEvents model)
-          , renderMeetupEvents date model.meetupEvents
+          -- , renderMeetupEvents date model.meetupEvents
           -- , renderNewMeetupGroups newMeetupGroups
           -- , renderSuggestedConferences suggestedConferences
           , renderRelatedWebsites
