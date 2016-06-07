@@ -306,22 +306,31 @@ speakerImage filename =
         ]
         []
 
+-- talkView : ConferenceTalkR -> Html Msg
+-- talkView record =
+--     a [ class ("event-card talk grow " ++ record.slug), href record.conferenceLink]
+--         [ div
+--             [ style [("display", "flex")]
+--             ]
+--             [ confImage record.conferenceLogoFilename (record.slug ++ "-conf-image")
+--             , speakerImage record.speakerPhotoFilename
+--             ]
+--         , div [class "talk-content"]
+--           [ h3 []
+--                [text (withDefault "Talk title to be announced" record.talkTitle)]
+--           , h4 [] [text ("by " ++ record.speaker)]
+--           , div [] [text record.date]
+--           , div [ class "location"] [text record.location]
+--           ]
+--         ]
+
 talkView : ConferenceTalkR -> Html Msg
 talkView record =
-    a [ class ("event-card talk grow " ++ record.slug), href record.conferenceLink]
-        [ div
-            [ style [("display", "flex")]
-            ]
-            [ confImage record.conferenceLogoFilename (record.slug ++ "-conf-image")
-            , speakerImage record.speakerPhotoFilename
-            ]
-        , div [class "talk-content"]
-          [ h3 []
-               [text (withDefault "Talk title to be announced" record.talkTitle)]
-          , h4 [] [text ("by " ++ record.speaker)]
-          , div [] [text record.date]
-          , div [ class "location"] [text record.location]
-          ]
+    tr []
+        [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
+        , td [] [text record.speaker]
+        , td []  [text record.location] -- TODO: div [ class "location"] ?
+        , td [] [text record.date]
         ]
 
 meetupView : MeetupEvent -> Html Msg
@@ -363,6 +372,17 @@ renderEvent event =
 --         -- Meetup record ->
 --         --     meetupView record
 
+-- renderEvents : List Event -> Html Msg
+-- renderEvents events =
+--     let
+--         eventViews = List.map renderEvent events
+--     in
+--         div [ class "upcoming-talks"]
+--             [ h2 [] [ text "Upcoming Talks and Workshops" ]
+--             , div [ class "talks"]
+--                 eventViews
+--             ]
+
 renderEvents : List Event -> Html Msg
 renderEvents events =
     let
@@ -370,9 +390,22 @@ renderEvents events =
     in
         div [ class "upcoming-talks"]
             [ h2 [] [ text "Upcoming Talks and Workshops" ]
-            , div [ class "talks"]
-                eventViews
+            , table []
+                (
+                    [ thead []
+                        [ tr []
+                            [ th [] [ text "Talk Title"]
+                            , th [] [ text "Speaker"]
+                            , th [] [ text "Where"]
+                            , th [] [ text "When"]
+                            ]
+                        ]
+                    , tbody []
+                        eventViews
+                    ]
+                )
             ]
+
 
 renderSuggestedConference : SuggestedConferenceR -> Html Msg
 renderSuggestedConference conf =

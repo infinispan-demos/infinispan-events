@@ -60,11 +60,24 @@ header {
   height: 200px;
 }
 
+/* .upcoming-talks { */
+/*   margin-top: 4em; */
+/*   h2 { */
+/*     text-align: center; */
+/*     font-size: 2rem; */
+/*   } */
+/* } */
+
 .upcoming-talks {
+  //margin-top: 10em;
   margin-top: 4em;
-  h2 {
-    text-align: center;
-    font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 200px;
+  table {
+    margin-top: 1em;
   }
 }
 
