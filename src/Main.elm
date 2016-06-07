@@ -329,6 +329,7 @@ talkView record =
     tr []
         [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
         , td [] [text record.speaker]
+        , td [] [text record.conferenceName]
         , td []  [text record.location] -- TODO: div [ class "location"] ?
         , td [] [text record.date]
         ]
@@ -396,6 +397,7 @@ renderEvents events =
                         [ tr []
                             [ th [] [ text "Talk Title"]
                             , th [] [ text "Speaker"]
+                            , th [] [ text "Conference"]
                             , th [] [ text "Where"]
                             , th [] [ text "When"]
                             ]
