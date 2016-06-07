@@ -384,6 +384,49 @@ renderEvents events =
                 eventViews
             ]
 
+talkAdminView : ConferenceTalkR -> Html
+talkAdminView record =
+    tr []
+        [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
+        , td [] [text record.speaker]
+        , td []  [text record.location] -- TODO: div [ class "location"] ?
+        , td [] [text record.date]
+        ]
+
+renderAdminEvent : Event -> Html
+renderAdminEvent event =
+    case event of
+        ConferenceTalk record ->
+            talkAdminView record
+        Meetup record ->
+            meetupView record
+
+renderAdminEvents : List Event -> Html
+renderAdminEvents events =
+    let
+        rows = List.map renderAdminEvent events
+    in
+        div [ class "admin-talks"]
+            [ h2 [] [ text "Admin Conference Talks and Meetups" ]
+            , table []
+                (
+                    [ thead []
+                        [ tr []
+                            [ th [] [ text "Talk Title"]
+                            , th [] [ text "Speaker"]
+                            , th [] [ text "Where"]
+                            , th [] [ text "When"]
+                            ]
+                        ]
+                    , tbody []
+                        rows
+                    ]
+                )
+
+--            , div [ class "talks"]
+--                eventViews
+            ]
+
 renderSuggestedConference : SuggestedConferenceR -> Html
 renderSuggestedConference conf =
     tr []
@@ -442,8 +485,9 @@ mainView address model =
             [ h1 [] [ text "Elm Events" ]
             ]
         , renderEvents upcomingEvents
-        , renderNewMeetupGroups newMeetupGroups
-        , renderSuggestedConferences suggestedConferences
+        , renderAdminEvents upcomingEvents
+--        , renderNewMeetupGroups newMeetupGroups
+--        , renderSuggestedConferences suggestedConferences
         ]
 -- VIEW
 -- Examples of:
