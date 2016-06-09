@@ -81,6 +81,27 @@ header {
   }
 }
 
+.admin-talks {
+  //margin-top: 10em;
+  margin-top: 4em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 200px;
+  /* table { */
+  /*   margin-top: 1em; */
+  /* } */
+  thead th, tbody th, tbody td {
+      padding: 1rem;
+      /* width: 75%; */
+  }
+  input {
+      width: 400px;
+  }
+
+}
+
 .talks {
   display: flex;
   flex-wrap: wrap;
@@ -232,6 +253,21 @@ thead th, tbody th, tbody td {
   }
 }
 
+/* .add-event-form { */
+/*   width: 200px; */
+/*   display: flex; */
+/*   flex-direction: column; */
+/*   align-items: center; */
+/*   width: 100%; */
+/*   padding-bottom: 200px; */
+/*   table { */
+/*     margin-top: 1em; */
+/*   } */
+
+/*   /\* align-items: center; *\/ */
+/*   /\* display: flex; *\/ */
+/*   /\* flex-direction: column; *\/ */
+/* } */
 
 #melbjs-seb-porto-conf-image {
   background-size: 305px;

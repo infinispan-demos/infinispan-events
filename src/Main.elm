@@ -1,6 +1,9 @@
 import Html exposing (..)
 import Html.App exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onInput, onClick)
+import Json.Encode
+import Json.Decode
 import Maybe exposing (withDefault)
 import Date exposing (Date)
 import Task
@@ -77,12 +80,32 @@ main =
 type alias Model =
   { dateToday : Maybe Date
   , meetupEvents : Maybe (List MeetupEvent)
+  , newEventTitle : String
+  , newEventSpeaker : String
+  , newEventConf : String
+  , newEventLoc: String
+  , newEventDate: String
+  , newEventLink: String
+  , insertResult: (String, String)
   }
 
 model : Model
 model =
   { dateToday = Nothing
   , meetupEvents = Nothing
+  , newEventTitle = "Scaling in-memory data grid automatically with Kubernetes"
+  , newEventSpeaker = "Ray Tsang"
+  , newEventConf = "DevNation"
+  , newEventLoc = "San Francisco, USA"
+  , newEventDate = "29 June 2016"
+  , newEventLink = "http://www.devnation.org/#50856"
+  -- , newEventTitle = ""
+  -- , newEventSpeaker = ""
+  -- , newEventConf = ""
+  -- , newEventLoc = ""
+  -- , newEventDate = ""
+  -- , newEventLink = ""
+  , insertResult = ("","")
   }
 
 init = model !
@@ -103,6 +126,15 @@ type Msg
   | TodayDateFetched Date
   | MeetupEventsFetched (List MeetupEvent)
   | ErrorFetchingEvents Http.Error
+  | NewEventTitle String
+  | NewEventSpeaker String
+  | NewEventConference String
+  | NewEventLocation String
+  | NewEventDate String
+  | NewEventLink String
+  | InsertEvent
+  | InsertEventSucceed Bool
+  | InsertEventFail Http.Error
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -111,17 +143,88 @@ update msg model =
   case msg of
     TodayDateFetched date ->
       { model | dateToday = Just date } ! []
+
     MeetupEventsFetched events ->
       { model | meetupEvents = Just events } ! []
+
     ErrorFetchingEvents e ->
       let
         _ = Debug.log "ErrorFetchingEvents" e
       in
         model ! []
+
     NoOp ->
       model ! []
 
+    NewEventTitle title ->
+      { model | newEventTitle = title } ! []
 
+    NewEventSpeaker speaker ->
+      { model | newEventSpeaker = speaker } ! []
+
+    NewEventConference conf ->
+      { model | newEventConf = conf } ! []
+
+    NewEventLocation loc ->
+      { model | newEventLoc = loc } ! []
+
+    NewEventDate date ->
+      { model | newEventDate = date } ! []
+
+    NewEventLink link ->
+      { model | newEventLink = link } ! []
+
+    InsertEvent ->
+      model ! [ performInsertEvent (newEventAsJson model)]
+
+    InsertEventSucceed _ ->
+      { model | insertResult = ("green", "Event inserted") } ! []
+
+    InsertEventFail httpErr ->
+      { model | insertResult = errorMapper httpErr } ! []
+
+
+errorMapper : Http.Error -> (String, String)
+errorMapper err =
+  case err of
+    Http.Timeout -> ("red", "Http request timed out")
+
+    Http.NetworkError -> ("red", "Network error")
+
+    Http.UnexpectedPayload s -> ("red", s)
+
+    Http.BadResponse status s -> ("red", "Bad response: " ++ toString status ++ " " ++ s)
+
+
+performInsertEvent : Http.Body -> Cmd Msg
+performInsertEvent event =
+  let
+    url =
+      "http://localhost:3000/events"
+  in
+    Task.perform InsertEventFail InsertEventSucceed (Http.post decodeInsertedEvent url event)
+
+
+decodeInsertedEvent : Json.Decode.Decoder Bool
+decodeInsertedEvent =
+  Json.Decode.at ["succeed"] Json.Decode.bool
+
+
+newEventAsJson : Model -> Http.Body
+newEventAsJson model =
+  let
+    newEventJson =
+      Json.Encode.object
+        [ ("title", Json.Encode.string model.newEventTitle)
+        , ("speaker", Json.Encode.string model.newEventSpeaker)
+        , ("conference", Json.Encode.string model.newEventConf)
+        , ("location", Json.Encode.string model.newEventLoc)
+        , ("date", Json.Encode.string model.newEventDate)
+        , ("link", Json.Encode.string model.newEventLink)
+        ]
+  in
+    -- Http.string (Json.Encode.encode 0 newEventJson)
+    Http.string (Debug.log "newEvent" (Json.Encode.encode 0 newEventJson))
 
 
 upcomingEvents : List Event
@@ -556,6 +659,144 @@ renderMeetupEvents dateToday maybeEvents =
       div [] []
 
 
+-- talkAdminView : ConferenceTalkR -> Html Msg
+-- talkAdminView record =
+--     tr []
+--         [ td [] [text (withDefault "Talk title to be announced" record.talkTitle)]
+--         , td [] [text record.speaker]
+--         , td [] [text record.conferenceName]
+--         , td []  [text record.location] -- TODO: div [ class "location"] ?
+--         , td [] [text record.date]
+--         , td [] [text record.conferenceLink]
+--         , td [] [button [] [text "X"]]
+--         ]
+
+-- renderAdminEvent : Event -> Html Msg
+-- renderAdminEvent event =
+--     case event of
+--         ConferenceTalk record ->
+--             talkAdminView record
+
+-- newEventView : Event -> Html Msg
+-- newEventView event =
+--   tr []
+--       [ td [] [input [type' "text", placeholder "Talk title"] []]
+--       , td [] [input [type' "text", placeholder "Speaker name"] []]
+--       , td [] [input [type' "text", placeholder "Conference"] []]
+--       , td [] [input [type' "text", placeholder "Location"] []]
+--       , td [] [input [type' "text", placeholder "Date"] []]
+--       , td [] [input [type' "text", placeholder "Talk link"] []]
+--       ]
+
+-- renderInsertEvent : Event -> Html Msg
+-- renderInsertEvent event =
+--     let
+--         eventView = newEventView event
+--     in
+--         div [ class "admin-talks"]
+--             [ h2 [] [ text "Insert New Event" ]
+--             , table []
+--                 (
+--                     [ thead []
+--                         [ tr []
+--                             [ th [] [ text "Talk Title"]
+--                             , th [] [ text "Speaker"]
+--                             , th [] [ text "Conference"]
+--                             , th [] [ text "Where"]
+--                             , th [] [ text "When"]
+--                             , th [] [ text "Link"]
+--                             , th [] [ text "Action"]
+--                             ]
+--                         ]
+--                     , tbody []
+--                        [eventView]
+--                     ]
+--                 )
+--             ]
+
+newEventView : Event -> Html Msg
+newEventView event =
+  tr []
+      [ td [] [input [type' "text", placeholder "Talk title"] []]
+      , td [] [input [type' "text", placeholder "Speaker name"] []]
+      , td [] [input [type' "text", placeholder "Conference"] []]
+      , td [] [input [type' "text", placeholder "Location"] []]
+      , td [] [input [type' "text", placeholder "Date"] []]
+      , td [] [input [type' "text", placeholder "Talk link"] []]
+      ]
+
+
+renderInsertEvent : Model -> Html Msg
+renderInsertEvent model =
+  div [ class "admin-talks"]
+    [ h2 [] [ text "Insert New Event" ]
+    , table []
+      (
+        [ thead [] []
+        , tbody []
+           [ tr []
+               [ td [] [ text "Talk title"]
+               , td [] [input [type' "text", placeholder "Talk title"
+                              , onInput NewEventTitle
+                              --, value "Scaling in-memory data grid automatically with Kubernetes"
+                              ] []]
+               ]
+             , tr []
+               [ td [] [ text "Speaker name"]
+               , td [] [input [type' "text", placeholder "Speaker name"
+                              , onInput NewEventSpeaker
+                              --, value "Ray Tsang"
+                              ] []]
+               ]
+             , tr []
+               [ td [] [ text "Conference"]
+               , td [] [input [type' "text", placeholder "Conference"
+                              , onInput NewEventConference
+                              --, value "DevNation"
+                              ] []]
+               ]
+             , tr []
+               [ td [] [ text "Location"]
+               , td [] [input [type' "text", placeholder "Location"
+                              , onInput NewEventLocation
+                              --, value "San Francisco, USA"
+                              ] []]
+               ]
+             , tr []
+               [ td [] [ text "Date"]
+               , td [] [input [type' "text", placeholder "Date"
+                              , onInput NewEventDate
+                              --, value "29 June 2016"
+                              ] []]
+               ]
+             , tr []
+               [ td [] [ text "Talk link"]
+               , td [] [input [type' "text", placeholder "Talk link"
+                              , onInput NewEventLink
+                              --, value "http://www.devnation.org/#50856"
+                              ] []]
+               ]
+             , tr []
+               [ td [] []
+               , td [] [button [ onClick InsertEvent ] [ text "Insert" ]]
+               ]
+           ]
+        ]
+      )
+    , viewInsertResult model
+    ]
+
+viewInsertResult : Model -> Html msg
+viewInsertResult model =
+  let
+    (color, message) = model.insertResult
+  in
+    if not (String.isEmpty message) then
+      div [ style [("color", color)] ] [ text message ]
+    else
+      div [] []
+
+
 mainView : Model -> Html Msg
 mainView model =
   case model.dateToday of
@@ -566,6 +807,8 @@ mainView model =
               [ h1 [] [ text "Elm Events" ]
               ]
           , renderEvents (getFutureEvents upcomingEvents model)
+          , renderInsertEvent model
+          -- , renderAdminEvents upcomingEvents
           -- , renderMeetupEvents date model.meetupEvents
           -- , renderNewMeetupGroups newMeetupGroups
           -- , renderSuggestedConferences suggestedConferences

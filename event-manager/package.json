@@ -2,13 +2,16 @@
   "name": "event-manager",
   "version": "0.1.0",
   "description": "Conference and meetup event manager",
-  "main": "app.js",
+  "main": "events.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "infinispan": "file:../../../events/summit16/jboss-datagrid-7.0.0-nodejs-client/infinispan-0.2.0-ER7-redhat-1.tgz",
+    "underscore": "^1.8.3"
   }
 }
