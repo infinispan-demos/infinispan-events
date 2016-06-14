@@ -1,4 +1,13 @@
+# elm-package generated files
 elm-stuff/
-node_modules/
-tmp/
+
+# Elm webpack generated file
 elm.js
+
+# Node.js logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules

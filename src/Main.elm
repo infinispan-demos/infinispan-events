@@ -4,6 +4,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Json.Encode
 import Json.Decode
+import Json.Decode exposing ((:=))
 import Maybe exposing (withDefault)
 import Date exposing (Date)
 import Task
@@ -87,6 +88,8 @@ type alias Model =
   , newEventDate: String
   , newEventLink: String
   , insertResult: (String, String)
+  , events: Maybe (List ConferenceTalkR)
+  , eventsError: (String, String)
   }
 
 model : Model
@@ -106,13 +109,54 @@ model =
   -- , newEventDate = ""
   -- , newEventLink = ""
   , insertResult = ("","")
+  , events = Nothing
+  , eventsError = ("", "")
   }
+
 
 init = model !
   [ getCurrentDateCmd
-  , getMeetupEventsCmd
+  -- , getMeetupEventsCmd
+  , getEventsCmd
   ]
 
+
+getEventsCmd : Cmd Msg
+getEventsCmd =
+  let
+    url =
+      "http://localhost:3000/events"
+  in
+    Task.perform GetEventsFail GetEventsSucceed (Http.get decodeGetEvents url)
+
+
+jsonApply : Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b
+jsonApply func value =
+    Json.Decode.object2 (<|) func value
+
+
+decodeGetEvents : Json.Decode.Decoder (List ConferenceTalkR)
+decodeGetEvents =
+  let
+    event = Json.Decode.map ConferenceTalkR
+            ("speaker" := Json.Decode.string) `jsonApply`
+            ("slug" := Json.Decode.string) `jsonApply`
+            ("location" := Json.Decode.string) `jsonApply`
+            ("date" := Json.Decode.string) `jsonApply`
+            ("talkTitle" := Json.Decode.maybe Json.Decode.string) `jsonApply`
+            ("conferenceName" := Json.Decode.string) `jsonApply`
+            ("conferenceLink" := Json.Decode.string) `jsonApply`
+            ("speakerPhotoFilename" := Json.Decode.string) `jsonApply`
+            ("conferenceLogoFilename" := Json.Decode.string)
+    -- event = object6 ConferenceTalkR
+    --         ("title" := string)
+    --         ("speaker" := string)
+    --         ("conference" := string)
+    --         ("location" := string)
+    --         ("date" := string)
+    --         ("link" := string)
+  in
+    Json.Decode.list event
 
 
 -- ype Msg = TheDate Date | NoOp
@@ -135,12 +179,14 @@ type Msg
   | InsertEvent
   | InsertEventSucceed Bool
   | InsertEventFail Http.Error
+  | GetEventsSucceed (List ConferenceTalkR)
+  | GetEventsFail Http.Error
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  -- case (Debug.log "msg" msg) of
-  case msg of
+  case (Debug.log "msg" msg) of
+  -- case msg of
     TodayDateFetched date ->
       { model | dateToday = Just date } ! []
 
@@ -182,6 +228,12 @@ update msg model =
 
     InsertEventFail httpErr ->
       { model | insertResult = errorMapper httpErr } ! []
+
+    GetEventsSucceed events ->
+      { model | events = Just events } ! []
+
+    GetEventsFail httpErr ->
+      { model | eventsError = errorMapper httpErr } ! []
 
 
 errorMapper : Http.Error -> (String, String)
@@ -495,13 +547,13 @@ renderEvent event =
 --         -- Meetup record ->
 --         --     meetupView record
 
-renderEvents : List Event -> Html Msg
-renderEvents events =
+renderStaticEvents : List Event -> Html Msg
+renderStaticEvents events =
     let
         eventViews = List.map renderEvent events
     in
         div [ class "upcoming-talks"]
-            [ h2 [] [ text "Upcoming Talks and Workshops" ]
+            [ h2 [] [ text "(Static) Upcoming Talks and Workshops" ]
             , div [ class "talks"]
                 eventViews
             ]
@@ -529,6 +581,39 @@ renderEvents events =
 --                     ]
 --                 )
 --             ]
+
+
+renderEvents : Model -> Html Msg
+renderEvents model =
+  case model.events of
+    Just events ->
+      let
+          -- filteredEvents = filterMeetupEvents dateToday events
+          eventViews = List.map talkView events
+      in
+          div [ class "upcoming-talks"]
+              [ h2 [] [ text "Upcoming Talks and Workshops" ]
+              , div [ class "talks"]
+                  eventViews
+              ]
+    Nothing ->
+      let
+        (color, message) = model.eventsError
+      in
+        if not (String.isEmpty message) then
+          div [ style [("color", color)] ] [ text message ]
+        else
+          div [] [ text ("hello world: " ++ message)]
+
+    -- let
+    --     eventViews = List.map renderEvent events
+    -- in
+    --     div [ class "upcoming-talks"]
+    --         [ h2 [] [ text "Upcoming Talks and Workshops" ]
+    --         , div [ class "talks"]
+    --             eventViews
+    --         ]
+
 
 renderSuggestedConference : SuggestedConferenceR -> Html Msg
 renderSuggestedConference conf =
@@ -806,7 +891,8 @@ mainView model =
           , header []
               [ h1 [] [ text "Elm Events" ]
               ]
-          , renderEvents (getFutureEvents upcomingEvents model)
+          , renderEvents model
+          , renderStaticEvents (getFutureEvents upcomingEvents model)
           , renderInsertEvent model
           -- , renderAdminEvents upcomingEvents
           -- , renderMeetupEvents date model.meetupEvents
