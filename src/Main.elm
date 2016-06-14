@@ -267,12 +267,15 @@ newEventAsJson model =
   let
     newEventJson =
       Json.Encode.object
-        [ ("title", Json.Encode.string model.newEventTitle)
-        , ("speaker", Json.Encode.string model.newEventSpeaker)
-        , ("conference", Json.Encode.string model.newEventConf)
+        [ ("speaker", Json.Encode.string model.newEventSpeaker)
+        , ("slug", Json.Encode.string "")
         , ("location", Json.Encode.string model.newEventLoc)
         , ("date", Json.Encode.string model.newEventDate)
-        , ("link", Json.Encode.string model.newEventLink)
+        , ("talkTitle", Json.Encode.string model.newEventTitle)
+        , ("conferenceName", Json.Encode.string model.newEventConf)
+        , ("conferenceLink", Json.Encode.string model.newEventLink)
+        , ("speakerPhotoFilename", Json.Encode.string "")
+        , ("conferenceLogoFilename", Json.Encode.string "")
         ]
   in
     -- Http.string (Json.Encode.encode 0 newEventJson)
@@ -892,7 +895,7 @@ mainView model =
               [ h1 [] [ text "Elm Events" ]
               ]
           , renderEvents model
-          , renderStaticEvents (getFutureEvents upcomingEvents model)
+          -- , renderStaticEvents (getFutureEvents upcomingEvents model)
           , renderInsertEvent model
           -- , renderAdminEvents upcomingEvents
           -- , renderMeetupEvents date model.meetupEvents
