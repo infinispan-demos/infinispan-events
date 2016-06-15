@@ -58,19 +58,20 @@ var event2 = {
   , conferenceLogoFilename: ''
 };
 
-var event3 = {
-  speaker: 'Galder Zamarreño & Divya Mehra'
-  , slug: ''
-  , location: 'San Francisco, USA'
-  , date: '28 June 2016'
-  , talkTitle: 'Building reactive applications with Node.js and Red Hat JBoss Data Grid'
-  , conferenceName: 'DevNation'
-  , conferenceLink: 'http://www.devnation.org/#44484'
-  , speakerPhotoFilename: ''
-  , conferenceLogoFilename: ''
-};
+// var event3 = {
+//   speaker: 'Galder Zamarreño & Divya Mehra'
+//   , slug: ''
+//   , location: 'San Francisco, USA'
+//   , date: '28 June 2016'
+//   , talkTitle: 'Building reactive applications with Node.js and Red Hat JBoss Data Grid'
+//   , conferenceName: 'DevNation'
+//   , conferenceLink: 'http://www.devnation.org/#44484'
+//   , speakerPhotoFilename: ''
+//   , conferenceLogoFilename: ''
+// };
 
-var events = [event1, event2, event3];
+// var events = [event1, event2, event3];
+var events = [event1, event2];
 
 function initStore(client) {
   return client.clear() // Clear any backend data
