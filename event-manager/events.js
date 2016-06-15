@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var expressWs = require('express-ws')(app);
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -74,6 +75,7 @@ var events = [event1, event2, event3];
 function initStore(client) {
   return client.clear() // Clear any backend data
     .then(initEvents(client)) // Add initial events
+    .then(addEventListener(client)) // Add listener for events
     .then(function() { return client; }); // Chain client invocations
 }
 
@@ -181,6 +183,26 @@ function iterate(it, events, fn) {
 //     return !entry.done ? iteratorLoop(it, it.next(), fn) : entry;
 //   });
 // }
+
+app.ws('/events', function(ws, req) {
+  console.log('Websocket connection open');
+});
+
+var eventsWss = expressWs.getWss('/events');
+
+function addEventListener(client) {
+  return function() {
+    return client.addListener('create', function(key) {
+      console.log('[Event] Event added: ' + key);
+      client.get(key).then(function(value) {
+        console.log('WS clients size are: ' + eventsWss.clients.length);
+        eventsWss.clients.forEach(function(wsClient) {
+          wsClient.send(value);
+        });
+      });
+    });
+  };
+}
 
 app.post('/events', function (req, res) {
   // console.log('POST on /events: ' + JSON.stringify(req.body));

@@ -14,6 +14,7 @@ import Result exposing (Result)
 import Http
 import String
 import Date.Format as DateFormat
+import WebSocket
 -- import Date
 
 import MeetupEvents exposing (getEvents, MeetupEvent)
@@ -71,7 +72,8 @@ main =
     { init = init
     , view = mainView
     , update = update
-    , subscriptions = (\_ -> Sub.none)
+    -- , subscriptions = (\_ -> Sub.none)
+    , subscriptions = subscriptions
     }
 
 
@@ -159,6 +161,20 @@ decodeGetEvents =
     Json.Decode.list event
 
 
+decoderEvent : Json.Decode.Decoder ConferenceTalkR
+decoderEvent =
+  Json.Decode.map ConferenceTalkR
+    ("speaker" := Json.Decode.string) `jsonApply`
+    ("slug" := Json.Decode.string) `jsonApply`
+    ("location" := Json.Decode.string) `jsonApply`
+    ("date" := Json.Decode.string) `jsonApply`
+    ("talkTitle" := Json.Decode.maybe Json.Decode.string) `jsonApply`
+    ("conferenceName" := Json.Decode.string) `jsonApply`
+    ("conferenceLink" := Json.Decode.string) `jsonApply`
+    ("speakerPhotoFilename" := Json.Decode.string) `jsonApply`
+    ("conferenceLogoFilename" := Json.Decode.string)
+
+
 -- ype Msg = TheDate Date | NoOp
 --
 -- myCmd : Cmd Msg
@@ -181,6 +197,7 @@ type Msg
   | InsertEventFail Http.Error
   | GetEventsSucceed (List ConferenceTalkR)
   | GetEventsFail Http.Error
+  | NewEvent String
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -235,6 +252,9 @@ update msg model =
     GetEventsFail httpErr ->
       { model | eventsError = errorMapper httpErr } ! []
 
+    NewEvent event ->
+      { model | events = appendEvent model event } ! []
+
 
 errorMapper : Http.Error -> (String, String)
 errorMapper err =
@@ -278,8 +298,36 @@ newEventAsJson model =
         , ("conferenceLogoFilename", Json.Encode.string "")
         ]
   in
-    -- Http.string (Json.Encode.encode 0 newEventJson)
-    Http.string (Debug.log "newEvent" (Json.Encode.encode 0 newEventJson))
+    Http.string (Json.Encode.encode 0 newEventJson)
+    -- Http.string (Debug.log "newEvent" (Json.Encode.encode 0 newEventJson))
+
+
+decodeEvent : String -> Result String ConferenceTalkR
+decodeEvent event =
+  Json.Decode.decodeString decoderEvent event
+
+
+appendEvent : Model -> String -> Maybe (List ConferenceTalkR)
+appendEvent model event =
+  let
+    decodeResult = decodeEvent event
+  in
+    case decodeResult of
+      Ok decoded ->
+        Maybe.map (\es -> decoded :: es) model.events
+      Err err ->
+        Debug.log ("Decode error in new event" ++ err) Nothing
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  WebSocket.listen "ws://localhost:3000/events" NewEvent
+
+
+-- VIEW
 
 
 upcomingEvents : List Event
