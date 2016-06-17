@@ -92,6 +92,9 @@ type alias Model =
   , insertResult: (String, String)
   , events: Maybe (List ConferenceTalkR)
   , eventsError: (String, String)
+  , searchEventQuery: String
+  , searchResults: Maybe (List ConferenceTalkR)
+  , searchError: (String, String)
   }
 
 model : Model
@@ -113,6 +116,9 @@ model =
   , insertResult = ("","")
   , events = Nothing
   , eventsError = ("", "")
+  , searchEventQuery = ""
+  , searchResults = Nothing
+  , searchError = ("", "")
   }
 
 
@@ -198,6 +204,10 @@ type Msg
   | GetEventsSucceed (List ConferenceTalkR)
   | GetEventsFail Http.Error
   | NewEvent String
+  | SearchEventQuery String
+  | SearchEvent
+  | SearchEventFail Http.Error
+  | SearchEventSucceed (List ConferenceTalkR)
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -254,6 +264,18 @@ update msg model =
 
     NewEvent event ->
       { model | events = appendEvent model event } ! []
+
+    SearchEventQuery query ->
+      { model | searchEventQuery = query } ! []
+
+    SearchEvent ->
+      model ! [ performSearchEvent model.searchEventQuery ]
+
+    SearchEventSucceed events ->
+      { model | searchResults = Just events } ! []
+
+    SearchEventFail httpErr ->
+      { model | searchError = errorMapper httpErr } ! []
 
 
 errorMapper : Http.Error -> (String, String)
@@ -317,6 +339,16 @@ appendEvent model event =
         Maybe.map (\es -> decoded :: es) model.events
       Err err ->
         Debug.log ("Decode error in new event" ++ err) Nothing
+
+
+performSearchEvent : String -> Cmd Msg
+performSearchEvent q =
+  let
+    url =
+      Http.url "http://localhost:3000/search" [("q", q)]
+  in
+    Task.perform SearchEventFail SearchEventSucceed (Http.get decodeGetEvents url)
+
 
 
 -- SUBSCRIPTIONS
@@ -654,7 +686,7 @@ renderEvents model =
         if not (String.isEmpty message) then
           div [ style [("color", color)] ] [ text message ]
         else
-          div [] [ text ("hello world: " ++ message)]
+          div [] []
 
     -- let
     --     eventViews = List.map renderEvent events
@@ -922,7 +954,7 @@ renderInsertEvent model =
     , viewInsertResult model
     ]
 
-viewInsertResult : Model -> Html msg
+viewInsertResult : Model -> Html Msg
 viewInsertResult model =
   let
     (color, message) = model.insertResult
@@ -931,6 +963,131 @@ viewInsertResult model =
       div [ style [("color", color)] ] [ text message ]
     else
       div [] []
+
+
+-- renderSearchEvent : Model -> Html Msg
+-- renderSearchEvent model =
+--   --  div [ class "admin-talks"]
+--   div [ class "search-talks"]
+--     [ h2 [] [ text "Search Event" ]
+--     , div [ class "center-row"]
+--       [ div [ class "large-12  columns"]
+--         [ ul [ class "inline-list center" ]
+--           [
+--           -- i [ class "fi-magnifying-glass" ] []
+--           -- , a [ href "#", class "search-icon"]
+--           --   [ li [ class "search-field"] []
+--           --   ]
+
+--            -- Html.form []
+--            --  [
+--              div [ class "row collapse" ]
+--               [ div [ class "small-12 columns"]
+--                 [ input
+--                   [ type' "text"
+--                   -- , class ""
+--                   , class "dream-search"
+--                   , placeholder "Type query"
+--                   , onInput SearchEventQuery
+--                   ] []
+--                 ]
+--               , button
+--                 [ class "alert expanded button"
+--                 , onClick SearchEvent
+--                 ] [ text "Search" ]
+--               ]
+--             -- ]
+--           ]
+--         ]
+--       ]
+--    , viewSearchResult model
+--    ]
+
+
+renderSearchEvent : Model -> Html Msg
+renderSearchEvent model =
+  div [ class cssCenter ]
+    [ h2 [] [ text "Search Event" ]
+    , div [ class "input-group" ]
+        [ input
+            [ type' "text"
+            , class "input-group-field"
+            , placeholder "Query"
+            , onInput SearchEventQuery
+            ] []
+        , div [ class "input-group-button"]
+            [ input
+                [ type' "submit"
+                , class "button"
+                , value "Search"
+                , onClick SearchEvent
+                ] []
+            ]
+        ]
+    -- , viewSearchResult model
+    ]
+
+  -- --  div [ class "admin-talks"]
+  -- div [ class "search-talks"]
+  --   [ h2 [] [ text "Search Event" ]
+  --   , div [ class "center-row"]
+  --     [ div [ class "large-12  columns"]
+  --       [ ul [ class "inline-list center" ]
+  --         [
+  --         -- i [ class "fi-magnifying-glass" ] []
+  --         -- , a [ href "#", class "search-icon"]
+  --         --   [ li [ class "search-field"] []
+  --         --   ]
+
+  --          -- Html.form []
+  --          --  [
+  --            div [ class "row collapse" ]
+  --             [ div [ class "small-12 columns"]
+  --               [ input
+  --                 [ type' "text"
+  --                 -- , class ""
+  --                 , class "dream-search"
+  --                 , placeholder "Type query"
+  --                 , onInput SearchEventQuery
+  --                 ] []
+  --               ]
+  --             , button
+  --               [ class "alert expanded button"
+  --               , onClick SearchEvent
+  --               ] [ text "Search" ]
+  --             ]
+  --           -- ]
+  --         ]
+  --       ]
+  --     ]
+  --  , viewSearchResult model
+  --  ]
+
+
+viewSearchResult : Model -> Html Msg
+viewSearchResult model =
+  case model.searchResults of
+    Just events ->
+      let
+          eventViews = List.map talkView events
+      in
+        if (List.isEmpty eventViews) then
+          div [ class (cssCenter ++ "search-talks-empty") ]
+            [ text "No events found" ]
+        else
+          div [ class "upcoming-talks" ]
+            [ div [ class "talks"] eventViews ]
+    Nothing ->
+      let
+        (color, message) = model.searchError
+      in
+        if not (String.isEmpty message) then
+          -- div [ style [("color", color)] ] [ text message ]
+          div [ class (cssCenter ++ "search-talks-error") ]
+            [ text message ]
+        else
+          div [ class "search-talks-empty" ] []
+
 
 
 mainView : Model -> Html Msg
@@ -945,6 +1102,8 @@ mainView model =
           , renderEvents model
           -- , renderStaticEvents (getFutureEvents upcomingEvents model)
           , renderInsertEvent model
+          , renderSearchEvent model
+          , viewSearchResult model
           -- , renderAdminEvents upcomingEvents
           -- , renderMeetupEvents date model.meetupEvents
           -- , renderNewMeetupGroups newMeetupGroups
@@ -978,3 +1137,6 @@ styles =
         ( "text-align", "center" )
       ]
   }
+
+
+cssCenter = "row small-6 large-centered columns text-center "

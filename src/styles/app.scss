@@ -269,6 +269,99 @@ thead th, tbody th, tbody td {
 /*   /\* flex-direction: column; *\/ */
 /* } */
 
+/* Styles for expanding search element */
+
+/* .search-talks { */
+/*   /\* margin-top: 4em; *\/ */
+/*   display: flex; */
+/*   flex-direction: column; */
+/*   align-items: center; */
+/*   /\* width: 100%; *\/ */
+/*   padding-bottom: 200px; */
+
+/*   .search-field { */
+/*       width: 0; */
+/*   } */
+
+/*   /\* .search-icon { *\/ */
+/*   /\*   margin-top: 15px; *\/ */
+/*   /\* } *\/ */
+
+/*   span { */
+/*       padding-left: 5px; */
+/*       color: #fff; */
+/*   } */
+
+/*   .icon { */
+/*       font-size: 20px; */
+/*       color: #fff; */
+/*   } */
+
+/*   .center { */
+/*       padding-top: 11%; */
+/*   } */
+
+/*   /\* .fi-magnifying-glass:before { *\/ */
+/*   /\*   content: "\f16c"; *\/ */
+/*   /\*   position: absolute; *\/ */
+/*   /\*   margin-left: 7px; *\/ */
+/*   /\*   margin-top: 2 px; *\/ */
+/*   /\*   font-size: 30px; *\/ */
+/*   /\*   line-height: 50px; *\/ */
+/*   /\*   color: #cccccc; *\/ */
+/*   /\*   z-index: 2; *\/ */
+/*   /\*   display: inline-block; *\/ */
+/*   /\* } *\/ */
+
+/*   /\* input[type="text"].dream-search { *\/ */
+/*   /\*     width: 150px; *\/ */
+/*   /\*     padding-left: 35px; *\/ */
+/*   /\*     &:focus { *\/ */
+/*   /\*         width: 250px; *\/ */
+/*   /\*         transition: ease-in-out,width .35s ease-in-out; *\/ */
+/*   /\*     } *\/ */
+/*   /\* } *\/ */
+
+/*   input[type="text"].dream-search { */
+/*       /\* width: 370px; *\/ */
+/*       padding-left: 35px; */
+/*       /\* &:focus { *\/ */
+/*       /\*     width: 250px; *\/ */
+/*       /\*     transition: ease-in-out,width .35s ease-in-out; *\/ */
+/*       /\* } *\/ */
+/*   } */
+
+/*   .center-row { */
+/*       /\* background-color: #0078A0; *\/ */
+/*       background-color: $elm-blue; */
+/*       border-radius: 15px; */
+/*       height: 100px; */
+/*       margin-left: auto; */
+/*       margin-right: auto; */
+/*       /\* margin-top: 10%; *\/ */
+/*       max-width: 400px; */
+/*       ul { */
+/*           display: table; */
+/*           margin: 0 auto; */
+/*       } */
+/*   } */
+
+/*   .button { */
+/*       margin-top: 100px; */
+/*   } */
+/* } */
+
+
+.search-talks-empty {
+  padding-bottom: 200px;
+}
+
+.search-talks-error {
+  color: red;
+  padding-bottom: 200px;
+}
+
+
 #melbjs-seb-porto-conf-image {
   background-size: 305px;
   background-position: -24px -25px;

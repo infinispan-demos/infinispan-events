@@ -77,7 +77,11 @@ function initStore(client) {
   return client.clear() // Clear any backend data
     .then(initEvents(client)) // Add initial events
     .then(addEventListener(client)) // Add listener for events
-    .then(function() { return client; }); // Chain client invocations
+    .then(addSearchScript(client)) // Add search script
+    .then(function() { return client; }) // Chain client invocations
+    .catch(function(err) {
+      console.log('Error initialising store: ' + err);
+    });
 }
 
 function initEvents(client) {
@@ -95,6 +99,16 @@ function initEvents(client) {
     //   var eventAsString = JSON.stringify(event);
     //   return client.putIfAbsent(eventId, eventAsString);
     // })).then(function() { return client; });
+  };
+}
+
+function addSearchScript(client) {
+  return function() {
+    var Promise = require('promise');
+    var readFile = Promise.denodeify(require('fs').readFile);
+    return readFile('search-events.js').then(function(script) {
+      return client.addScript('search-events', script.toString());
+    });
   };
 }
 
@@ -223,6 +237,22 @@ app.post('/events', function (req, res) {
   // console.log('Title: ' + req.body.title);
   // res.send('{"succeed":true}');
 });
+
+app.get('/search', function(req, res) {
+  // console.log('Query is' + req.query.q);
+  store.then(function(client) {
+    client.execute('search-events', {query: req.query.q})
+      .then(function(result) {
+        console.log(result);
+        console.log(JSON.stringify(result));
+        // var asJson = '[' + result.join(',') + ']';
+        var asJson = '[' + result + ']';
+        console.log(asJson);
+        res.send(asJson);
+      });
+  });
+});
+
 
 function newEventId() {
   return _.uniqueId('event_');
