@@ -369,6 +369,13 @@ renderRelatedWebsites =
     , p []
         [ text "Learn about Infinispan, the community project behind JBoss Data Grid, by downloading latest releases, checking its documentation, asking questions on the public forums or trying out the simple tutorials."
         ]
+    , h3 []
+        [ a [ href "http://blog.infinispan.org" ]
+            [ text "Infinispan Blog" ]
+        ]
+    , p []
+        [ text "Find out first about the new features going into Infinispan and about upcoming meetups and talks in this blog."
+        ]
     ]
 
 
