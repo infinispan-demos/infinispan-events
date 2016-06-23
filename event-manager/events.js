@@ -174,8 +174,7 @@ app.get('/search', function(req, res) {
   store.then(function(client) {
     client.execute('search-events', {query: req.query.q})
       .then(function(result) {
-        var asJson = '[' + result + ']';
-        res.send(asJson);
+        res.send(result);
       });
   });
 });
