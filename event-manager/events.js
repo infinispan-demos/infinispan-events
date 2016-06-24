@@ -145,9 +145,7 @@ var eventsWss = expressWs.getWss('/events');
 function addEventListener(client) {
   return function() {
     return client.addListener('create', function(key) {
-      console.log('[Event] Event added: ' + key);
       client.get(key).then(function(value) {
-        console.log('WS clients size are: ' + eventsWss.clients.length);
         eventsWss.clients.forEach(function(wsClient) {
           wsClient.send(value);
         });
