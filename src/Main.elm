@@ -74,7 +74,7 @@ model =
   , newEventSpeaker = "Ray Tsang"
   , newEventConf = "DevNation"
   , newEventLoc = "San Francisco, USA"
-  , newEventDate = "29 June 2016"
+  , newEventDate = "29 June 2016, 10:15"
   , newEventLink = "http://www.devnation.org/#50856"
   -- , newEventTitle = ""
   -- , newEventSpeaker = ""
@@ -431,7 +431,7 @@ renderInsertEvent model =
                [ td [] [ text "Date"]
                , td [] [input [type' "text", placeholder "Date"
                               , onInput NewEventDate
-                              , value "29 June 2016"
+                              , value "29 June 2016, 10:15"
                               ] []]
                ]
              , tr []

@@ -65,8 +65,20 @@ var event2 = {
   , conferenceLogoFilename: ''
 };
 
+var event3 = {
+  speaker: 'Nasu, Saran, Murphy & Elrahal'
+  , slug: ''
+  , location: 'San Francisco, USA'
+  , date: '30 June 2016, 15:30'
+  , talkTitle: 'The intersection of business rules management and big data'
+  , conferenceName: 'Red Hat Summit'
+  , conferenceLink: 'https://rh2016.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=41750'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
 
-var events = [event1, event2];
+
+var events = [event1, event2, event3];
 
 
 function initStore(client) {
@@ -119,7 +131,8 @@ app.get('/events', function (req, res) {
     });
 
     return fetchEvents.then(function(events) {
-      res.send('[' + events.join(',') + ']');
+      var sorted = sortByDate(events);
+      res.send('[' + sorted.join(',') + ']');
     });
   });
 });
@@ -128,8 +141,16 @@ app.get('/events', function (req, res) {
 function iterate(it, events, fn) {
   return it.next().then(function(entry) {
     return !entry.done
-      ? iterate(it, cat(events, [fn(entry)]), fn)
+      ? iterate(it, cat(events, [JSON.parse(fn(entry))]), fn)
       : events;
+  });
+}
+
+
+function sortByDate(events) {
+  var sorted = _.sortBy(events, 'date');
+  return _.map(sorted, function (e) {
+    return JSON.stringify(e);
   });
 }
 
@@ -160,8 +181,6 @@ app.post('/events', function (req, res) {
   var eventId = newEventId();
   store.then(function(client) {
     client.putIfAbsent(eventId, event).then(function(stored) {
-      console.log("Add event: " + stored);
-      // TODO: Use res.json()
       res.send('{"succeed":' + stored + '}');
     });
   });
