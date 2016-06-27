@@ -123,18 +123,10 @@ app.get('/', function (req, res) {
 
 
 app.get('/events', function (req, res) {
-  store.then(function(client) {
-    var fetchEvents = client.iterator(10).then(function(it) {
-      return iterate(it, [], function(entry) {
-        return entry.value;
-      });
-    });
+  // 1. Demo Event Iteration
+  // Iterate over events, sort them and respond
 
-    return fetchEvents.then(function(events) {
-      var sorted = sortByDate(events);
-      res.send('[' + sorted.join(',') + ']');
-    });
-  });
+  // ...
 });
 
 
@@ -165,13 +157,10 @@ var eventsWss = expressWs.getWss('/events');
 
 function addEventListener(client) {
   return function() {
-    return client.addListener('create', function(key) {
-      client.get(key).then(function(value) {
-        eventsWss.clients.forEach(function(wsClient) {
-          wsClient.send(value);
-        });
-      });
-    });
+    // 2. Demo Event Insert
+    // Register listener for added events
+
+    // ...
   };
 }
 
@@ -180,19 +169,20 @@ app.post('/events', function (req, res) {
   var event = req.body;
   var eventId = newEventId();
   store.then(function(client) {
-    client.putIfAbsent(eventId, event).then(function(stored) {
-      res.send('{"succeed":' + stored + '}');
-    });
+    // 2. Demo Event Insert
+    // Store new event in server
+
+    // ...
   });
 });
 
 
 app.get('/search', function(req, res) {
   store.then(function(client) {
-    client.execute('search-events', {query: req.query.q})
-      .then(function(result) {
-        res.send(result);
-      });
+    // 3. Demo Search Event
+    // Execute remote script to search through events
+
+    // ...
   });
 });
 

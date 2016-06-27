@@ -518,10 +518,10 @@ mainView model =
           , header []
               [ h1 [] [ text "JBoss Data Grid Events" ]
               ]
-          , renderEvents model
-          , renderInsertEvent model
-          , renderSearchEvent model
-          , viewSearchResult model
+          -- , renderEvents model
+          -- , renderInsertEvent model
+          -- , renderSearchEvent model
+          -- , viewSearchResult model
           , renderRelatedWebsites
           ]
     Nothing ->
