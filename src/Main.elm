@@ -393,63 +393,77 @@ newEventView event =
 
 renderInsertEvent : Model -> Html Msg
 renderInsertEvent model =
-  div [ class "admin-talks"]
-    [ h2 [] [ text "Insert New Event" ]
-    , table []
-      (
-        [ thead [] []
-        , tbody []
-           [ tr []
-               [ td [] [ text "Talk title"]
-               , td [] [input [type' "text", placeholder "Talk title"
-                              , onInput NewEventTitle
-                              , value "Scaling in-memory data grid automatically with Kubernetes"
-                              ] []]
-               ]
-             , tr []
-               [ td [] [ text "Speaker name"]
-               , td [] [input [type' "text", placeholder "Speaker name"
-                              , onInput NewEventSpeaker
-                              , value "Ray Tsang"
-                              ] []]
-               ]
-             , tr []
-               [ td [] [ text "Conference"]
-               , td [] [input [type' "text", placeholder "Conference"
-                              , onInput NewEventConference
-                              , value "DevNation"
-                              ] []]
-               ]
-             , tr []
-               [ td [] [ text "Location"]
-               , td [] [input [type' "text", placeholder "Location"
-                              , onInput NewEventLocation
-                              , value "San Francisco, USA"
-                              ] []]
-               ]
-             , tr []
-               [ td [] [ text "Date"]
-               , td [] [input [type' "text", placeholder "Date"
-                              , onInput NewEventDate
-                              , value "29 June 2016, 10:15"
-                              ] []]
-               ]
-             , tr []
-               [ td [] [ text "Talk link"]
-               , td [] [input [type' "text", placeholder "Talk link"
-                              , onInput NewEventLink
-                              , value "http://www.devnation.org/#50856"
-                              ] []]
-               ]
-             , tr []
-               [ td [] []
-               , td [] [button [ onClick InsertEvent ] [ text "Insert" ]]
-               ]
+ div [ class (cssCenter ++ "insert-new-event") ]
+   [ h2 [] [ text "Insert New Event" ]
+   , insertEventRow
+       "Talk title"
+       NewEventTitle
+       "Scaling in-memory data grid automatically with Kubernetes"
+   , insertEventRow
+       "Speaker name"
+       NewEventSpeaker
+       "Ray Tsang"
+   , insertEventRow
+       "Conference"
+       NewEventConference
+       "DevNation"
+   , insertEventRow
+       "Location"
+       NewEventLocation
+       "San Francisco, USA"
+   , insertEventRow
+       "Date"
+       NewEventDate
+       "29 June 2016, 10:15"
+   , insertEventRow
+       "Talk link"
+       NewEventLink
+       "http://www.devnation.org/#50856"
+   , div [ class "row"]
+       [ insertEventLabel ""
+       , button
+           [ class "button"
+           , onClick InsertEvent
            ]
-        ]
-      )
-    , viewInsertResult model
+           [ text "Insert" ]
+       ]
+   , viewInsertResult model
+   ]
+
+
+insertEventRow : String -> (String -> Msg) -> String -> Html Msg
+insertEventRow lbl msg v =
+  div [ class "row" ]
+    [ insertEventLabel lbl
+    , insertEventField
+        lbl
+        msg
+        v
     ]
+
+
+insertEventLabel : String -> Html Msg
+insertEventLabel v =
+  div [ class "small-3 columns" ]
+    [ label
+        [ for "right-label"
+        , class "text-right middle"
+        ] [ text v ]
+    ]
+
+
+insertEventField : String -> (String -> Msg) -> String -> Html Msg
+insertEventField desc msg v =
+  div [ class "small-9 columns" ]
+    [ input
+        [ type' "text"
+        , id "right-label"
+        , placeholder desc
+        , onInput msg
+        , value v
+        ] []
+    ]
+
 
 viewInsertResult : Model -> Html Msg
 viewInsertResult model =
