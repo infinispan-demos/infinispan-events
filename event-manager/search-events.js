@@ -10,7 +10,7 @@ var results = cache.values().stream()
   .sorted(function(e1, e2) {
     var json1 = JSON.parse(e1);
     var json2 = JSON.parse(e2);
-    return json1.date > json2.date;
+    return json1.date.compareTo(json2.date);
   })
   .filter(function(e) {
     return pattern.matcher(e).find();
