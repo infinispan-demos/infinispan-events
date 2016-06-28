@@ -41,7 +41,7 @@ function connect() {
 
 
 var event1 = {
-  speaker: 'Will Burns & John Osborne'
+  speaker: 'Will Burns, John Osborne & Divya Mehra'
   , slug: ''
   , location: 'San Francisco, USA'
   , date: '30 June 2016, 16:45'
@@ -54,7 +54,7 @@ var event1 = {
 
 
 var event2 = {
-  speaker: 'Kimberly Palko & Van Halbert'
+  speaker: 'Kimberly Palko, Cojan van Ballegoojen & Divya Mehra'
   , slug: ''
   , location: 'San Francisco, USA'
   , date: '30 June 2016, 11:30'
