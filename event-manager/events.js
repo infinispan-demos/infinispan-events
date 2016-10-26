@@ -41,44 +41,19 @@ function connect() {
 
 
 var event1 = {
-  speaker: 'Will Burns, John Osborne & Divya Mehra'
+  speaker: 'Galder Zamarreño'
   , slug: ''
-  , location: 'San Francisco, USA'
-  , date: '30 June 2016, 16:45'
-  , talkTitle: 'Big data processing and analytics in Red Hat JBoss Data Grid 7'
-  , conferenceName: 'Red Hat Summit'
-  , conferenceLink: 'https://rh2016.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=42051&tclass=popup#.V1l5Ads356c.twitter'
+  , location: 'Casablanca, Morocco'
+  , date: '03 November 2016, 15:00'
+  , talkTitle: 'Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan'
+  , conferenceName: 'Devoxx Morocco'
+  , conferenceLink: ''
   , speakerPhotoFilename: ''
   , conferenceLogoFilename: ''
 };
 
 
-var event2 = {
-  speaker: 'Kimberly Palko, Cojan van Ballegoojen & Divya Mehra'
-  , slug: ''
-  , location: 'San Francisco, USA'
-  , date: '30 June 2016, 11:30'
-  , talkTitle: 'Real-time data services with Red Hat JBoss Data Virtualization and Red Hat JBoss Data Grid'
-  , conferenceName: 'Red Hat Summit'
-  , conferenceLink: 'https://rh2016.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=45619&tclass=popup#.V1l5lmRWPOA.twitter'
-  , speakerPhotoFilename: ''
-  , conferenceLogoFilename: ''
-};
-
-var event3 = {
-  speaker: 'Nasu, Saran, Murphy & Elrahal'
-  , slug: ''
-  , location: 'San Francisco, USA'
-  , date: '30 June 2016, 15:30'
-  , talkTitle: 'The intersection of business rules management and big data'
-  , conferenceName: 'Red Hat Summit'
-  , conferenceLink: 'https://rh2016.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=41750'
-  , speakerPhotoFilename: ''
-  , conferenceLogoFilename: ''
-};
-
-
-var events = [event1, event2, event3];
+var events = [event1];
 
 
 function initStore(client) {

@@ -14,7 +14,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Http
 import Json.Encode
-import Json.Decodei
+import Json.Decode
 import Misc exposing (viewRelatedWebsites, githubForkRibbon)
 import Result exposing (Result)
 import String
@@ -63,13 +63,13 @@ model =
     , talksError =
         ( "", "" )
         -- Insert talk state
-    , talkTitle = "Scaling in-memory data grid automatically with Kubernetes"
-    , talkSpeaker = "Ray Tsang"
-    , talkConf = "DevNation"
-    , talkLoc = "San Francisco, USA"
-    , talkDate = "29 June 2016, 10:15"
+    , talkTitle = "In-memory data revenge: the substrate between apps and data - an Infinispan case"
+    , talkSpeaker = "Emmanuel Bernard"
+    , talkConf = "Devoxx Belgium"
+    , talkLoc = "Antwerp, Belgium"
+    , talkDate = "9 November 2016, 14:00"
     , talkLink =
-        "http://www.devnation.org/#50856"
+        "http://cfp.devoxx.be/2016/talk/CSP-1623/In-memory_data_revenge:_the_substrate_between_apps_and_data_-_an_Infinispan_case"
     , insertResult =
         ( "", "" )
         -- Query talks state
