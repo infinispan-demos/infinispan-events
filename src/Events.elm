@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode
 import Json.Decode exposing ((:=))
+import List exposing (append)
 import Maybe exposing (withDefault)
 
 
@@ -49,7 +50,7 @@ viewTalkLabel v =
 
 decodeTalk : String -> Result String ConferenceTalk
 decodeTalk event =
-    Json.Decode.decodeString eventDecoder event
+    Json.Decode.decodeString talkDecoder event
 
 
 talksDecoder : Json.Decode.Decoder (List ConferenceTalk)
@@ -65,7 +66,7 @@ appendTalk talks t =
     in
         case res of
             Ok decoded ->
-                Maybe.map (\ts -> decoded :: ts) talks
+                Maybe.map (\ts -> append ts [ decoded ]) talks
 
             Err err ->
                 Debug.log ("Decode error in new event" ++ err) Nothing

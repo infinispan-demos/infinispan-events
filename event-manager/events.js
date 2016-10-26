@@ -44,7 +44,7 @@ var event1 = {
   speaker: 'Galder Zamarreño'
   , slug: ''
   , location: 'Casablanca, Morocco'
-  , date: '03 November 2016, 15:00'
+  , date: '3 November 2016, 15:00'
   , talkTitle: 'Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan'
   , conferenceName: 'Devoxx Morocco'
   , conferenceLink: ''
