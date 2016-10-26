@@ -54,7 +54,7 @@ decodeTalk event =
 
 talksDecoder : Json.Decode.Decoder (List ConferenceTalk)
 talksDecoder =
-    Json.Decode.list eventDecoder
+    Json.Decode.list talkDecoder
 
 
 appendTalk : Maybe (List ConferenceTalk) -> String -> Maybe (List ConferenceTalk)
@@ -71,8 +71,8 @@ appendTalk talks t =
                 Debug.log ("Decode error in new event" ++ err) Nothing
 
 
-eventDecoder : Json.Decode.Decoder ConferenceTalk
-eventDecoder =
+talkDecoder : Json.Decode.Decoder ConferenceTalk
+talkDecoder =
     Json.Decode.map ConferenceTalk
         ("speaker" := Json.Decode.string)
         `jsonApply` ("slug" := Json.Decode.string)
