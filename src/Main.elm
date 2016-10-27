@@ -157,11 +157,12 @@ update msg model =
             { model | insertResult = errorMapper httpErr } ! []
 
         NewTalk t ->
-            -- Demo 2.3: Implement appending a new talk
+            -- Demo 2.3: Implement appending a new talk (websocket effect)
             model ! []
 
         QueryTalk q ->
-            { model | query = q } ! []
+            -- Demo 3.1: Implement updating the query field (html effect)
+            model ! []
 
         QueryTalkClick ->
             model ! [ performQueryTalk model.query ]
@@ -397,7 +398,7 @@ view model =
         , viewEventsUpcoming model
           -- Demo 2.4: Uncomment dialog to insert new event
           -- , viewTalkDialog model
-          -- Demo 3: Uncomment dialog to search event
+          -- Demo 3.2: Uncomment dialog to search event
           -- , viewQueryTalk model
           -- , viewQueryResult model
         , viewRelatedWebsites
