@@ -12,7 +12,7 @@
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "express-ws": "^1.0.0",
-    "infinispan": "file:../../../events/summit16/jboss-datagrid-7.0.0-nodejs-client/infinispan-0.2.0-ER7-redhat-1.tgz",
+    "infinispan": "^0.3.0",
     "promise": "^7.1.1",
     "underscore": "^1.8.3"
   }

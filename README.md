@@ -1,24 +1,20 @@
-# JBoss Data Grid Events
+# Infinispan Events
 
 This is a fork of the [Elm Events](http://elm-events.org) website to promote 
-upcoming Red Hat JBoss Data Grid conference talks and meetups.
-
-The aim behind this website is to showcase the possibilities of the Red Hat
-JBoss Data Grid Node.js client.
+upcoming Infinispan and JBoss Data Grid conference talks and meetups.
 
 The architecture of this website is formed of 3-tiers: front-end based on Elm,
-middleware based on Node.js/Express.js, and a backend using Red Hat JBoss 
-Data Grid.
+middleware based on Node.js/Express.js, and a backend using Infinispan.
 
 ## Requirements
 
-* Red Hat JBoss Data Grid Server 7.
+* [Infinispan Server 9 or higher](http://infinispan.org/download/)
 * Node.js 0.10. It is recommended that [NVM](https://github.com/creationix/nvm) 
 is used to manage multiple Node.js versions.
 
 ## Running
 
-1. Start Red Hat JBoss Data Grid Server executing: `./bin/domain.sh`. 
+1. Start Infinispan Server executing: `./bin/domain.sh`. 
 Executing this starts up a domain formed of 2 nodes. If you want to add more 
 nodes, modify `./domain/configuration/host.xml` file to add more server 
 instances.
@@ -34,4 +30,3 @@ and calling `node events.js`.
 5. Start the Elm front-end by executing `npm start` from the root of this repo.
 
 6. Go to http://localhost:8080.
-
