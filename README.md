@@ -35,3 +35,10 @@ and calling `node events.js`.
 
 6. Go to http://localhost:8080.
 
+## Presentations
+
+This presentation was delivered in:
+
+* Building Reactive Applications With Node.Js Data Grid - DevNation 2016
+  * [Slides](https://speakerdeck.com/galderz/building-reactive-applications-with-node-dot-js-data-grid)
+  * [Video](http://developers.redhat.com/video/youtube/ebUbzrpCuTA/)
