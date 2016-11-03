@@ -36,4 +36,8 @@ and calling `node events.js`.
 This presentation was delivered in:
 
 * Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan - Soft-Shake 2016
-  * [Slides](https://speakerdeck.com/galderz/building-reactive-applications-with-node-dot-js-data-grid))
+  * [Slides](https://speakerdeck.com/galderz/building-reactive-applications-with-node-dot-js-data-grid)
+* Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan - Devoxx Morocco 2016
+  * [Slides](https://speakerdeck.com/galderz/learn-how-to-build-functional-reactive-applications-with-elm-node-dot-js-and-infinispan-1)
+
+
