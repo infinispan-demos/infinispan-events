@@ -14,3 +14,7 @@ node_modules
 
 # Ignore tags created by etags, ctags, gtags (GNU global) and cscope
 TAGS
+
+# IntelliJ
+.idea
+*.iml
