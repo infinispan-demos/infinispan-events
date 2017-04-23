@@ -43,17 +43,120 @@ function connect() {
 var event1 = {
   speaker: 'Galder Zamarreño'
   , slug: ''
-  , location: 'Casablanca, Morocco'
-  , date: '3 November 2016, 15:00'
-  , talkTitle: 'Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan'
-  , conferenceName: 'Devoxx Morocco'
-  , conferenceLink: ''
+  , location: 'Bangalore, India'
+  , date: '2017-04-27 16:30'
+  , talkTitle: 'Big Data In Action with Infinispan'
+  , conferenceName: 'Great Indian Developer Summit'
+  , conferenceLink: 'http://www.developermarch.com/developersummit/session.html?insert=Galder1'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+var event2 = {
+  speaker: 'Syed Rasheed, Cojan van Ballegooijen'
+  , slug: ''
+  , location: 'Boston, USA'
+  , date: '2017-05-02 10:15'
+  , talkTitle: 'Using real-time data to enable real-time analytics'
+  , conferenceName: 'Red Hat Summit'
+  , conferenceLink: 'https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=10438'
   , speakerPhotoFilename: ''
   , conferenceLogoFilename: ''
 };
 
 
-var events = [event1];
+var event3 = {
+  speaker: 'Anthony Golia, Russ Popeil'
+  , slug: ''
+  , location: 'Boston, USA'
+  , date: '2017-05-02 15:30'
+  , talkTitle: 'Improving Financial Market Risk accuracy using JBoss Data Grid'
+  , conferenceName: 'Red Hat Summit'
+  , conferenceLink: 'https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=108586'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+var event4 = {
+  speaker: 'Kim Palko, Ted Jones'
+  , slug: ''
+  , location: 'Boston, USA'
+  , date: '2017-05-04 11:30'
+  , talkTitle: 'Building Big Data analytics apps in OpenShift'
+  , conferenceName: 'Red Hat Summit'
+  , conferenceLink: 'https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=105079'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+var event5 = {
+  speaker: 'Ugo Landini, Sanne Grinovero, Andrea Leoncini, Andrea Tarocchi'
+  , slug: ''
+  , location: 'Boston, USA'
+  , date: '2017-05-04 13:00'
+  , talkTitle: 'Lab: Highly available and scalable complex event processing'
+  , conferenceName: 'Red Hat Summit'
+  , conferenceLink: 'https://rh2017.smarteventscloud.com/connect/sessionDetail.ww?SESSION_ID=100472'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+var event6 = {
+  speaker: 'Sanne Grinovero'
+  , slug: ''
+  , location: 'London, UK'
+  , date: '2017-05-11 13:10'
+  , talkTitle: 'Use Hibernate OGM to tame an Infinispan distributed K/V store'
+  , conferenceName: 'Devoxx UK'
+  , conferenceLink: 'http://cfp.devoxx.co.uk/2017/talk/IKD-0045/Quickstart_Hibernate_OGM_to_tame_an_Infinispan_distributed_key%2Fvalue_store'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+var event7 = {
+  speaker: 'Galder Zamarreño'
+  , slug: ''
+  , location: 'Malaga, Spain'
+  , date: '2017-05-19 11:00'
+  , talkTitle: 'Learn Functional Reactive Apps with Elm, Node.js and Infinispan'
+  , conferenceName: 'J On The Beach'
+  , conferenceLink: 'https://jonthebeach.com/schedule#learn-how-to-build-functional-reactive-applications-with-elm-node-js-and-infinispan'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+var event8 = {
+  speaker: 'Galder Zamarreño'
+  , slug: ''
+  , location: 'Berlin, Germany'
+  , date: '2017-06-13 16:30'
+  , talkTitle: 'Big Data In Action with Infinispan'
+  , conferenceName: 'Berlin Buzzwords'
+  , conferenceLink: 'https://berlinbuzzwords.de/17/session/big-data-action-infinispan'
+  , speakerPhotoFilename: ''
+  , conferenceLogoFilename: ''
+};
+
+
+// var event9 = {
+//   speaker: 'Sanne Grinovero'
+//   , slug: ''
+//   , location: 'Copenhagen, Denmark'
+//   , date: '2017-06-19 00:00'
+//   , talkTitle: 'One ORM to rule them all'
+//   , conferenceName: 'JDK IO'
+//   , conferenceLink: 'https://jdk.io/talks/183-one-orm-to-rule-them-all'
+//   , speakerPhotoFilename: ''
+//   , conferenceLogoFilename: ''
+// };
+
+
+var events = [event1, event2, event3, event4, event5, event6, event7, event8];
 
 
 function initStore(client) {

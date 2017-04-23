@@ -63,13 +63,13 @@ model =
     , talksError =
         ( "", "" )
         -- Insert talk state
-    , talkTitle = "In-memory data revenge: the substrate between apps and data - an Infinispan case"
-    , talkSpeaker = "Emmanuel Bernard"
-    , talkConf = "Devoxx Belgium"
-    , talkLoc = "Antwerp, Belgium"
-    , talkDate = "9 November 2016, 14:00"
+    , talkTitle = "One ORM to rule them all"
+    , talkSpeaker = "Sanne Grinovero"
+    , talkConf = "JDK IO"
+    , talkLoc = "Copenhagen, Denmark"
+    , talkDate = "2017-06-19 00:00"
     , talkLink =
-        "http://cfp.devoxx.be/2016/talk/CSP-1623/In-memory_data_revenge:_the_substrate_between_apps_and_data_-_an_Infinispan_case"
+        "https://jdk.io/talks/183-one-orm-to-rule-them-all"
     , insertResult =
         ( "", "" )
         -- Query talks state
