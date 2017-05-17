@@ -4,32 +4,42 @@ var merge             = require( 'webpack-merge' );
 var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 var autoprefixer      = require( 'autoprefixer' );
 var ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
+var CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+var entryPath         = path.join( __dirname, 'src/static/index.js' );
+var outputPath        = path.join( __dirname, 'dist' );
 
 console.log( 'WEBPACK GO!');
 
-// detemine build env
+// determine build env
 var TARGET_ENV = process.env.npm_lifecycle_event === 'build' ? 'production' : 'development';
+var outputFilename = TARGET_ENV === 'production' ? '[name]-[hash].js' : '[name].js'
 
 // common webpack config
 var commonConfig = {
 
   output: {
-    path:       path.resolve( __dirname, 'dist/' ),
-    filename: '[hash].js',
+    path:       outputPath,
+    filename: `/static/js/${outputFilename}`,
+    // publicPath: '/'
   },
 
   resolve: {
-    modulesDirectories: ['node_modules'],
-    extensions:         ['', '.js', '.elm']
+    extensions: ['', '.js', '.elm']
   },
 
   module: {
-    noParse: /\.elm$/
+    noParse: /\.elm$/,
+    loaders: [
+      {
+        test: /\.(eot|ttf|woff|woff2|svg)$/,
+        loader: 'file-loader'
+      }
+    ]
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/static/index.html',
       inject:   'body',
       filename: 'index.html'
     })
@@ -47,12 +57,13 @@ if ( TARGET_ENV === 'development' ) {
 
     entry: [
       'webpack-dev-server/client?http://localhost:8080',
-      path.join( __dirname, 'src/index.js' )
+      entryPath
     ],
 
     devServer: {
-      inline:   true,
-      progress: true
+      // serve index.html in place of 404 responses
+      historyApiFallback: true,
+      contentBase: './src',
     },
 
     module: {
@@ -60,7 +71,7 @@ if ( TARGET_ENV === 'development' ) {
         {
           test:    /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
-          loader:  'elm-webpack'
+          loader:  'elm-hot!elm-webpack?verbose=true&warn=true&debug=true'
         },
         {
           test: /\.(css|scss)$/,
@@ -83,7 +94,7 @@ if ( TARGET_ENV === 'production' ) {
 
   module.exports = merge( commonConfig, {
 
-    entry: path.join( __dirname, 'src/index.js' ),
+    entry: entryPath,
 
     module: {
       loaders: [
@@ -104,16 +115,26 @@ if ( TARGET_ENV === 'production' ) {
     },
 
     plugins: [
+      new CopyWebpackPlugin([
+        {
+          from: 'src/static/img/',
+          to:   'static/img/'
+        },
+        {
+          from: 'src/favicon.ico'
+        },
+      ]),
+
       new webpack.optimize.OccurenceOrderPlugin(),
 
       // extract CSS into a separate file
-      new ExtractTextPlugin( './[hash].css', { allChunks: true } ),
+      new ExtractTextPlugin( 'static/css/[name]-[hash].css', { allChunks: true } ),
 
       // minify & mangle JS/CSS
       new webpack.optimize.UglifyJsPlugin({
-          minimize:   true,
-          compressor: { warnings: false }
-          // mangle:  true
+        minimize:   true,
+        compressor: { warnings: false }
+        // mangle:  true
       })
     ]
 

@@ -1,3 +1,9 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
+@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+
+// can add Boostrap overrides, additional Sass/CSS below...
+
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro);
 
 $elm-blue: #60B5CC;
