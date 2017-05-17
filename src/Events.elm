@@ -3,7 +3,8 @@ module Events exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode
-import Json.Decode exposing ((:=))
+import Json.Decode exposing (field)
+import Json.Decode.Pipeline exposing (decode)
 import List exposing (append)
 import Maybe exposing (withDefault)
 
@@ -74,18 +75,13 @@ appendTalk talks t =
 
 talkDecoder : Json.Decode.Decoder ConferenceTalk
 talkDecoder =
-    Json.Decode.map ConferenceTalk
-        ("speaker" := Json.Decode.string)
-        `jsonApply` ("slug" := Json.Decode.string)
-        `jsonApply` ("location" := Json.Decode.string)
-        `jsonApply` ("date" := Json.Decode.string)
-        `jsonApply` ("talkTitle" := Json.Decode.maybe Json.Decode.string)
-        `jsonApply` ("conferenceName" := Json.Decode.string)
-        `jsonApply` ("conferenceLink" := Json.Decode.string)
-        `jsonApply` ("speakerPhotoFilename" := Json.Decode.string)
-        `jsonApply` ("conferenceLogoFilename" := Json.Decode.string)
-
-
-jsonApply : Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder a -> Json.Decode.Decoder b
-jsonApply func value =
-    Json.Decode.object2 (<|) func value
+    Json.Decode.Pipeline.decode ConferenceTalk
+    |> Json.Decode.Pipeline.required "speaker" Json.Decode.string
+    |> Json.Decode.Pipeline.required "slug" Json.Decode.string
+    |> Json.Decode.Pipeline.required "location" Json.Decode.string
+    |> Json.Decode.Pipeline.required "date" Json.Decode.string
+    |> Json.Decode.Pipeline.required "talkTitle" (Json.Decode.maybe Json.Decode.string)
+    |> Json.Decode.Pipeline.required "conferenceName" Json.Decode.string
+    |> Json.Decode.Pipeline.required "conferenceLink" Json.Decode.string
+    |> Json.Decode.Pipeline.required "speakerPhotoFilename" Json.Decode.string
+    |> Json.Decode.Pipeline.required "conferenceLogoFilename" Json.Decode.string

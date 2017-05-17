@@ -9,7 +9,6 @@ import Events
         , viewTalkLabel
         )
 import Html exposing (..)
-import Html.App exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Http
@@ -23,7 +22,7 @@ import WebSocket
 
 
 main =
-    Html.App.program
+    Html.program
         { init = init
         , view = view
         , update = update
@@ -91,14 +90,16 @@ getTalksCmd =
         url =
             "http://localhost:3000/events"
     in
-        Task.perform GetTalksFail GetTalksSucceed (Http.get talksDecoder url)
+        --Task.perform GetTalksFail GetTalksSucceed (Http.get talksDecoder url)
+        Http.send Talks (Http.get url talksDecoder)
 
 
 type Msg
     = NoOp
       -- Iterate talks messages
-    | GetTalksSucceed (List ConferenceTalk)
-    | GetTalksFail Http.Error
+--    | GetTalksSucceed (List ConferenceTalk)
+--    | GetTalksFail Http.Error
+    | Talks (Result Http.Error (List ConferenceTalk))
       -- Insert talk messages
     | TalkTitle String
     | TalkSpeaker String
@@ -107,15 +108,13 @@ type Msg
     | TalkDate String
     | TalkLink String
     | InsertTalkClick
-    | InsertTalkSucceed Bool
-    | InsertTalkFail Http.Error
+    | InsertTalk (Result Http.Error Bool)
       -- New talk message
     | NewTalk String
       -- Query talk messages
     | QueryTalk String
     | QueryTalkClick
-    | QueryTalkFail Http.Error
-    | QueryTalkSucceed (List ConferenceTalk)
+    | QueryResult (Result Http.Error (List ConferenceTalk))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -125,10 +124,10 @@ update msg model =
         NoOp ->
             model ! []
 
-        GetTalksSucceed talks ->
+        Talks (Ok talks) ->
             { model | talks = Just talks } ! []
 
-        GetTalksFail httpErr ->
+        Talks (Err httpErr) ->
             { model | talksError = errorMapper httpErr } ! []
 
         TalkTitle title ->
@@ -152,10 +151,10 @@ update msg model =
         InsertTalkClick ->
             model ! [ performInsertTalk (insertTalkAsJson model) ]
 
-        InsertTalkSucceed _ ->
+        InsertTalk (Ok _) ->
             { model | insertResult = ( "green", "Event inserted" ) } ! []
 
-        InsertTalkFail httpErr ->
+        InsertTalk (Err httpErr) ->
             { model | insertResult = errorMapper httpErr } ! []
 
         NewTalk t ->
@@ -167,10 +166,10 @@ update msg model =
         QueryTalkClick ->
             model ! [ performQueryTalk model.query ]
 
-        QueryTalkSucceed events ->
+        QueryResult (Ok events) ->
             { model | queryResults = Just events } ! []
 
-        QueryTalkFail httpErr ->
+        QueryResult (Err httpErr) ->
             { model | queryError = errorMapper httpErr } ! []
 
 
@@ -183,11 +182,14 @@ errorMapper err =
         Http.NetworkError ->
             ( "red", "Network error" )
 
-        Http.UnexpectedPayload s ->
-            ( "red", s )
+        Http.BadUrl _ ->
+            ( "red", "Bad url" )
 
-        Http.BadResponse status s ->
-            ( "red", "Bad response: " ++ toString status ++ " " ++ s )
+        Http.BadStatus _ ->
+            ( "red", "Bad status" )
+
+        Http.BadPayload _ _ ->
+            ( "red", "Bad payload" )
 
 
 performInsertTalk : Http.Body -> Cmd Msg
@@ -196,9 +198,8 @@ performInsertTalk talk =
         url =
             "http://localhost:3000/events"
     in
-        Task.perform InsertTalkFail
-            InsertTalkSucceed
-            (Http.post decodeInsertedTalk url talk)
+        Http.send InsertTalk
+            (Http.post url talk decodeInsertedTalk)
 
 
 decodeInsertedTalk : Json.Decode.Decoder Bool
@@ -222,8 +223,7 @@ insertTalkAsJson model =
                 , ( "conferenceLogoFilename", Json.Encode.string "" )
                 ]
     in
-        Http.string (Json.Encode.encode 0 talkAsJson)
-
+        Http.jsonBody talkAsJson
 
 
 -- Http.string (Debug.log "newEvent" (Json.Encode.encode 0 newEventJson))
@@ -233,10 +233,9 @@ performQueryTalk : String -> Cmd Msg
 performQueryTalk q =
     let
         url =
-            Http.url "http://localhost:3000/search" [ ( "q", q ) ]
+            "http://localhost:3000/search?q=" ++ q
     in
-        Task.perform QueryTalkFail QueryTalkSucceed (Http.get talksDecoder url)
-
+        Http.send QueryResult (Http.get url talksDecoder)
 
 
 -- SUBSCRIPTIONS
@@ -313,7 +312,7 @@ viewTalkField : String -> (String -> Msg) -> String -> Html Msg
 viewTalkField desc msg v =
     div [ class "small-9 columns" ]
         [ input
-            [ type' "text"
+            [ type_ "text"
             , id "right-label"
             , placeholder desc
             , onInput msg
@@ -341,7 +340,7 @@ viewQueryTalk model =
         [ h2 [] [ text "Search Talk" ]
         , div [ class "input-group" ]
             [ input
-                [ type' "text"
+                [ type_ "text"
                 , class "input-group-field"
                 , placeholder "Query"
                 , onInput QueryTalk
@@ -349,7 +348,7 @@ viewQueryTalk model =
                 []
             , div [ class "input-group-button" ]
                 [ input
-                    [ type' "submit"
+                    [ type_ "submit"
                     , class "button"
                     , value "Search"
                     , onClick QueryTalkClick
