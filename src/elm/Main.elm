@@ -86,11 +86,8 @@ init =
 
 getTalksCmd : Cmd Msg
 getTalksCmd =
-    let
-        url =
-            "http://localhost:3000/events"
-    in
-        Http.send Talks (Http.get url talksDecoder)
+  -- Demo 1: implement method
+  Cmd.none
 
 
 type Msg
