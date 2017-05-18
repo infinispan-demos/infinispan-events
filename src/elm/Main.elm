@@ -86,7 +86,7 @@ init =
 
 getTalksCmd : Cmd Msg
 getTalksCmd =
-  -- Demo 1: implement method
+  -- Demo 1.1: implement method
   Cmd.none
 
 
@@ -143,7 +143,7 @@ update msg model =
 
         InsertTalkClick ->
             -- Demo 2.2: Implement sending a command to insert talk
-            model ! [ performInsertTalk (insertTalkAsJson model) ]
+            model ! []
             
         InsertTalk (Ok _) ->
             { model | insertResult = ( "green", "Event inserted" ) } ! []
@@ -391,7 +391,7 @@ view model =
             ]
         , viewEventsUpcoming model
         -- Demo 2.1: Uncomment dialog to insert new event
-        --, viewTalkDialog model
+        , viewTalkDialog model
         -- Demo 3.2: Uncomment dialog to search event
         -- , viewQueryTalk model
         -- , viewQueryResult model
