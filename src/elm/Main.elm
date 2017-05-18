@@ -153,7 +153,8 @@ update msg model =
             { model | insertResult = errorMapper httpErr } ! []
 
         NewTalk t ->
-            { model | talks = appendTalk model.talks t } ! []
+            -- Demo 2.4: Implement showing new talks
+            model ! []
 
         QueryTalk q ->
             -- Demo 3.1: Implement updating the query field (html effect)
@@ -390,7 +391,7 @@ view model =
             [ h1 [] [ text "Infinispan Events" ]
             ]
         , viewEventsUpcoming model
-        -- Demo 2.4: Uncomment dialog to insert new event
+        -- Demo 2.3: Uncomment dialog to insert new event
         -- , viewTalkDialog model
         -- Demo 3.2: Uncomment dialog to search event
         -- , viewQueryTalk model
