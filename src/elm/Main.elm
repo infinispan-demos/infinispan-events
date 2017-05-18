@@ -86,8 +86,11 @@ init =
 
 getTalksCmd : Cmd Msg
 getTalksCmd =
-  -- Demo 1.1: implement method
-  Cmd.none
+    let
+        url =
+            "http://localhost:3000/events"
+    in
+        Http.send Talks (Http.get url talksDecoder)
 
 
 type Msg
@@ -142,8 +145,8 @@ update msg model =
             { model | talkLink = link } ! []
 
         InsertTalkClick ->
-            -- Demo 2.1: Implement sending a command to insert talk
-            model ! []
+            -- Demo 2.2: Implement sending a command to insert talk
+            model ! [ performInsertTalk (insertTalkAsJson model) ]
             
         InsertTalk (Ok _) ->
             { model | insertResult = ( "green", "Event inserted" ) } ! []
@@ -239,8 +242,8 @@ performQueryTalk q =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    -- Demo 2.2: Implement listening for new talks
-    Sub.none
+    -- Demo 2.3: Implement listening for new talks
+    WebSocket.listen "ws://localhost:3000/events" NewTalk
 
 
 -- VIEW
@@ -390,8 +393,8 @@ view model =
             [ h1 [] [ text "Infinispan Events" ]
             ]
         , viewEventsUpcoming model
-        -- Demo 2.3: Uncomment dialog to insert new event
-        -- , viewTalkDialog model
+        -- Demo 2.1: Uncomment dialog to insert new event
+        , viewTalkDialog model
         -- Demo 3.2: Uncomment dialog to search event
         -- , viewQueryTalk model
         -- , viewQueryResult model

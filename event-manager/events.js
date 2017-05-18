@@ -166,8 +166,9 @@ function addEventListener(client) {
 
 app.post('/events', function (req, res) {
   var event = req.body;
+  var eventId = newEventId();
   store.then(function(client) {
-    client.putIfAbsent('event_20', JSON.stringify(event)).then(function(stored) {
+    client.putIfAbsent(eventId, JSON.stringify(event)).then(function(stored) {
       res.send('{"succeed":' + stored + '}');
     });
   });
