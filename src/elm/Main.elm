@@ -391,7 +391,7 @@ view model =
             ]
         , viewEventsUpcoming model
         -- Demo 2.1: Uncomment dialog to insert new event
-        , viewTalkDialog model
+        --, viewTalkDialog model
         -- Demo 3.2: Uncomment dialog to search event
         -- , viewQueryTalk model
         -- , viewQueryResult model
