@@ -240,7 +240,7 @@ performQueryTalk q =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     -- Demo 2.3: Implement listening for new talks
-    WebSocket.listen "ws://localhost:3000/events" NewTalk
+    Sub.none
 
 
 -- VIEW
