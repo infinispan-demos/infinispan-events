@@ -116,8 +116,7 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case (Debug.log "msg" msg) of
-        -- case msg of
+    case msg of
         NoOp ->
             model ! []
 
@@ -221,9 +220,6 @@ insertTalkAsJson model =
                 ]
     in
         Http.jsonBody talkAsJson
-
-
--- Http.string (Debug.log "newEvent" (Json.Encode.encode 0 newEventJson))
 
 
 performQueryTalk : String -> Cmd Msg
