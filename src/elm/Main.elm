@@ -152,11 +152,10 @@ update msg model =
             { model | insertResult = errorMapper httpErr } ! []
 
         NewTalk t ->
-            -- Demo 2.4: Implement showing new talks
-            model ! []
+            { model | talks = appendTalk model.talks t } ! []
 
         QueryTalk q ->
-            -- Demo 3.1: Implement updating the query field (html effect)
+            -- Demo 3.2: Implement updating the query field (html effect)
             model ! []
 
         QueryTalkClick ->
@@ -391,8 +390,8 @@ view model =
             ]
         , viewEventsUpcoming model
         -- Demo 2.1: Uncomment dialog to insert new event
-        , viewTalkDialog model
-        -- Demo 3.2: Uncomment dialog to search event
+        --, viewTalkDialog model
+        -- Demo 3.1: Uncomment dialog to search event
         -- , viewQueryTalk model
         -- , viewQueryResult model
         , viewRelatedWebsites
