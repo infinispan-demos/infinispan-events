@@ -86,11 +86,8 @@ init =
 
 getTalksCmd : Cmd Msg
 getTalksCmd =
-    let
-        url =
-            "http://localhost:3000/events"
-    in
-        Http.send Talks (Http.get url talksDecoder)
+  -- Demo 1.1: implement method
+  Cmd.none
 
 
 type Msg
@@ -116,13 +113,13 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case (Debug.log "msg" msg) of
-        -- case msg of
+    case msg of
         NoOp ->
             model ! []
 
         Talks (Ok talks) ->
-            { model | talks = Just talks } ! []
+            -- Demo 1.2: Implement assigning results
+            model ! []
 
         Talks (Err httpErr) ->
             { model | talksError = errorMapper httpErr } ! []
@@ -146,8 +143,9 @@ update msg model =
             { model | talkLink = link } ! []
 
         InsertTalkClick ->
-            model ! [ performInsertTalk (insertTalkAsJson model) ]
-
+            -- Demo 2.1: Implement sending a command to insert talk
+            model ! []
+            
         InsertTalk (Ok _) ->
             { model | insertResult = ( "green", "Event inserted" ) } ! []
 
@@ -158,7 +156,8 @@ update msg model =
             { model | talks = appendTalk model.talks t } ! []
 
         QueryTalk q ->
-            { model | query = q } ! []
+            -- Demo 3.1: Implement updating the query field (html effect)
+            model ! []
 
         QueryTalkClick ->
             model ! [ performQueryTalk model.query ]
@@ -240,8 +239,8 @@ performQueryTalk q =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    WebSocket.listen "ws://localhost:3000/events" NewTalk
-
+    -- Demo 2.2: Implement listening for new talks
+    Sub.none
 
 
 -- VIEW
@@ -391,9 +390,11 @@ view model =
             [ h1 [] [ text "Infinispan Events" ]
             ]
         , viewEventsUpcoming model
-        , viewTalkDialog model
-        , viewQueryTalk model
-        , viewQueryResult model
+        -- Demo 2.4: Uncomment dialog to insert new event
+        -- , viewTalkDialog model
+        -- Demo 3.2: Uncomment dialog to search event
+        -- , viewQueryTalk model
+        -- , viewQueryResult model
         , viewRelatedWebsites
         ]
 
