@@ -90,15 +90,12 @@ getTalksCmd =
         url =
             "http://localhost:3000/events"
     in
-        --Task.perform GetTalksFail GetTalksSucceed (Http.get talksDecoder url)
         Http.send Talks (Http.get url talksDecoder)
 
 
 type Msg
     = NoOp
       -- Iterate talks messages
---    | GetTalksSucceed (List ConferenceTalk)
---    | GetTalksFail Http.Error
     | Talks (Result Http.Error (List ConferenceTalk))
       -- Insert talk messages
     | TalkTitle String
