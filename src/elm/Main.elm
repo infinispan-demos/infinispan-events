@@ -118,8 +118,7 @@ update msg model =
             model ! []
 
         Talks (Ok talks) ->
-            -- Demo 1.2: Implement assigning results
-            model ! []
+            { model | talks = Just talks } ! []
 
         Talks (Err httpErr) ->
             { model | talksError = errorMapper httpErr } ! []
