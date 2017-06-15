@@ -31,13 +31,10 @@ and calling `node events.js`.
 
 6. Go to http://localhost:8080.
 
-## Presentations
+## Live Events
 
-This presentation was delivered in:
+Here's a list of conferences and user groups where this demo has been presented. 
 
-* Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan - Soft-Shake 2016
-  * [Slides](https://speakerdeck.com/galderz/building-reactive-applications-with-node-dot-js-data-grid)
-* Learn how to build Functional Reactive Applications with Elm, Node.js and Infinispan - Devoxx Morocco 2016
-  * [Slides](https://speakerdeck.com/galderz/learn-how-to-build-functional-reactive-applications-with-elm-node-dot-js-and-infinispan-1)
-
-
+* 28th June 2016 - Dev Nation ([slides](https://speakerdeck.com/galderz/building-reactive-applications-with-node-dot-js-data-grid) | [video](https://www.youtube.com/watch?v=ebUbzrpCuTA))
+* 3rd November 2016 - Devoxx Morocco ([slides](https://speakerdeck.com/galderz/learn-how-to-build-functional-reactive-applications-with-elm-node-dot-js-and-infinispan-1) | video N/A)
+* 19th May 2017 - J On The Beach ([slides](https://speakerdeck.com/galderz/learn-how-to-build-functional-reactive-applications-with-elm-node-dot-js-and-infinispan-2) | [video](https://www.youtube.com/watch?v=77uQLEdUzs8))
